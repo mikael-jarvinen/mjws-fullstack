@@ -1,10 +1,22 @@
 import React from 'react'
-import Content from '../components/Content'
 import { Box, Container } from '@material-ui/core'
 import { Parallax, Background as BackgroundParallax } from 'react-parallax'
 import Background from '../components/Background'
+import { useQuery } from '@apollo/client'
+import { GET_CONTENT } from '../api'
+import Loader from '../components/Loader'
 
 const Home = () => {
+  const { loading, error, data } = useQuery(GET_CONTENT)
+  
+  if (loading) {
+    return <Loader size={100}/>
+  }
+
+  if (error) {
+    return <h1>Something went wrong, failed to load content from API :(</h1>
+  }
+
   return (
     <> 
       <Parallax strength={2500}>
@@ -17,7 +29,7 @@ const Home = () => {
               boxShadow={20}
               border='1px solid lightgrey'
             >
-              <Content/>
+              {data.content}
             </Box>
           </Container>
         </Box>

@@ -1,6 +1,6 @@
 import React from 'react'
 import backgroundImg from '../assets/images/background.png'
-import { Box } from '@material-ui/core'
+import { Box, Divider, Typography } from '@material-ui/core'
 
 const Background = () => {
   return (
@@ -17,8 +17,9 @@ const Background = () => {
         top='50%'
         textAlign='center'
       >
-        <h1>M.J. Web&Software</h1>
-        <p>Webpalvelut ja ohjelmistot</p>
+        <Typography variant='h2'>M.J. Web&Software</Typography>
+        <Divider/>
+        <Typography variant='body1'>Räätälöidyt webpalvelut ja ohjelmistot</Typography>
       </Box>
     </Box>
   )
