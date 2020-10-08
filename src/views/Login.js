@@ -14,6 +14,7 @@ const Login = () => {
   }
 
   if (data) {
+    document.cookie = 'signedin=true'
     window.localStorage.setItem('apiToken', data.login)
     return <Redirect to='/'/>
   }

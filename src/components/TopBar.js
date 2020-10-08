@@ -1,23 +1,31 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   AppBar,
   Toolbar,
-  IconButton,
   Box,
   Typography,
-  Button
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Snackbar,
+  IconButton
 } from '@material-ui/core'
-import MenuIcon from '@material-ui/icons/Menu'
-import { useQuery, useApolloClient } from '@apollo/client'
-import { WHOAMI } from '../api'
+import CloseIcon from '@material-ui/icons/Close'
+import { useQuery, useApolloClient, useMutation } from '@apollo/client'
+import { WHOAMI, CONTACT } from '../api'
+import { Form } from 'informed'
+import TextInput from './TextInput'
+import EmailValidator from 'email-validator'
 
 const TopBar = () => {
+  const [dialog, toggleDialog] = useState(false)
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
   const {data} = useQuery(WHOAMI)
+  const [sendContact] = useMutation(CONTACT)
   const client = useApolloClient()
-
-  if (data && data.whoami) {
-    console.log(data.whoami)
-  }
 
   const handleLogout = () => {
     window.localStorage.clear()
@@ -31,16 +39,127 @@ const TopBar = () => {
     })
   }
 
+  const handleContactSubmit = ({ email, name, message }) => {
+    sendContact({
+      variables: {
+        email,
+        name,
+        message
+      }
+    })
+    toggleDialog(!dialog)
+    setSnackbarOpen(true)
+  }
+
+  const validateEmail = value => {
+    if (!value || !EmailValidator.validate(value)) {
+      return 'Virheellinen sähköpostiosoite'
+    }
+  }
+
+  const validateName = value => {
+    if (!value || value.length < 9) {
+      return 'Nimen täytyy olla pitempi kuin 8 kirjainta'
+    }
+  }
+
+  const validateMessage = value => {
+    if (!value || value.length < 10) {
+      return 'Viestin tulee olla vähintään 10 kirjainta pitkä'
+    }
+  }
 
   return (
     <>
       <AppBar>
         <Toolbar>
-          <IconButton edge='start' aria-label='menu'>
-            <Box color='white'>
-              <MenuIcon color='inherit'/>
-            </Box>
-          </IconButton>
+          <Box color='white'>
+            <Button
+              variant='outlined'
+              color='inherit'
+              onClick={() => toggleDialog(!dialog)}
+            >
+              ota yhteyttä
+            </Button>
+          </Box>
+          {snackbarOpen ?
+            <Snackbar
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'center'
+              }}
+              open={snackbarOpen}
+              autoHideDuration={8000}
+              onClose={() => setSnackbarOpen(false)}
+              message='Yhteydenotto lähetetty'
+              action={
+                <>
+                  <IconButton
+                    size='small'
+                    aria-label='close'
+                    onClick={() => setSnackbarOpen}
+                  >
+                    <CloseIcon fontSize='small'/>
+                  </IconButton>
+                </>
+              }
+            /> : null}
+          {dialog ?
+            <Dialog
+              open={dialog}
+              onClose={() => toggleDialog(!dialog)}
+              aria-labelledby='contact-form-dialog-title'
+            >
+              <DialogTitle id='contact-form-dialog-title'>
+                Ota yhteyttä
+              </DialogTitle>
+              <Form
+                onSubmit={handleContactSubmit} 
+                aria-labelledby='contact-form-dialog-title'
+              >
+                <DialogContent>
+                  <DialogContentText>
+                    Ota yhteys lähettämällä sähköpostia
+                  </DialogContentText>
+                  <Box>
+                    <Box display='flex'>
+                      <Box marginRight={2}>
+                        <TextInput
+                          field='email'
+                          label='sähköposti'
+                          variant='filled'
+                          validate={validateEmail}
+                        />
+                      </Box>
+                      <TextInput
+                        field='name'
+                        label='nimi'
+                        variant='filled'
+                        validate={validateName}
+                      />
+                    </Box>
+                    <Box marginTop={2}>
+                      <TextInput
+                        field='message'
+                        label='viesti'
+                        variant='filled'
+                        multiline
+                        rows={3}
+                        fullWidth
+                        validate={validateMessage}
+                      />
+                    </Box>
+                  </Box>
+                </DialogContent>
+                <DialogActions>
+                  <Box margin={2}>
+                    <Button type='submit'>
+                      lähetä
+                    </Button>
+                  </Box>
+                </DialogActions>
+              </Form>
+            </Dialog>: null}
           {data && data.whoami.username !== '' ?
             <Box display='flex' flexGrow={1}>
               <Box
@@ -60,7 +179,7 @@ const TopBar = () => {
                   onClick={handleLogout}
                   variant='outlined'
                 >
-              logout
+                  logout
                 </Button>
               </Box>
             </Box>
