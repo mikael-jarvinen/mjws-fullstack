@@ -1,5 +1,4 @@
 import React from 'react'
-import backgroundImg from '../assets/images/background.png'
 import { Box, Divider, Typography } from '@material-ui/core'
 
 const Background = () => {
@@ -9,7 +8,7 @@ const Background = () => {
       display='flex'
       justifyContent='center'
     >
-      <img src={backgroundImg} alt='background'/>
+      <img src='/background.png' alt='background'/>
       <Box
         flexGrow={1}
         color='white'

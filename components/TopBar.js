@@ -15,7 +15,7 @@ import {
 } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
 import { useQuery, useApolloClient, useMutation } from '@apollo/client'
-import { WHOAMI, CONTACT } from '../api'
+import { WHOAMI, CONTACT } from '../libs/queries'
 import { Form } from 'informed'
 import TextInput from './TextInput'
 import EmailValidator from 'email-validator'

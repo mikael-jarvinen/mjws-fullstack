@@ -11,7 +11,7 @@ const TextInput = asField(({ fieldState, fieldApi, ...props }) => {
   const { onChange, onBlur, forwardedRef, ...rest } = props
 
   return (
-    <React.Fragment>
+    <>
       <Box>
         <TextField
           {...rest}
@@ -37,7 +37,7 @@ const TextInput = asField(({ fieldState, fieldApi, ...props }) => {
           ) : null}
         </Typography>
       </Box>
-    </React.Fragment>
+    </>
   )
 })
 

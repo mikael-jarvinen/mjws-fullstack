@@ -15,7 +15,10 @@ if (process.env.NODE_ENV === 'development') {
 const httpLink = createHttpLink({ uri })
 
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('apiToken')
+  let token = ''
+  if (process.browser) {
+    token = localStorage.getItem('apiToken')
+  }
 
   return {
     headers: {

@@ -1,13 +1,19 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useLazyQuery } from '@apollo/client'
-import { LOGIN } from '../api'
+import { LOGIN } from '../libs/queries'
 import { Box, Button, Divider, Typography } from '@material-ui/core'
 import { Form } from 'informed'
 import TextInput from '../components/TextInput'
-import { Redirect } from 'wouter'
+import { useRouter } from 'next/router'
 
 const Login = () => {
+  const [clientRender, setClientRender] = useState(false)
   const [login, { data }] = useLazyQuery(LOGIN)
+  const router = useRouter()
+
+  useEffect(() => {
+    setClientRender(true)
+  })
 
   const handleSubmit = ({ username, password}) => {
     login({ variables: { username, password } })
@@ -16,13 +22,17 @@ const Login = () => {
   if (data) {
     document.cookie = 'signedin=true'
     window.localStorage.setItem('apiToken', data.login)
-    return <Redirect to='/'/>
+    router.push('/')
   }
 
   const validateEmpty = value => {
     if (!value) {
       return 'Cannot be empty'
     }
+  }
+
+  if (!clientRender) {
+    return null
   }
 
   return (
