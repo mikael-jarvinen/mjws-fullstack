@@ -5,7 +5,8 @@ import Background from '../components/Background'
 import { useQuery, useMutation } from '@apollo/client'
 import { HOME_PAGE, POST_CONTENT } from '../libs/queries'
 import Loader from '../components/Loader'
-import ReactMarkdown from 'react-markdown/with-html'
+import ReactMarkdown from 'react-markdown'
+import htmlParser from 'react-markdown/plugins/html-parser'
 import MDEditor from '@uiw/react-md-editor'
 import TopBar from '../components/TopBar'
 
@@ -15,6 +16,10 @@ const Home = () => {
   const { loading, error, data } = useQuery(HOME_PAGE)
   const [saveContent] = useMutation(POST_CONTENT)
   
+  const parseHtml = htmlParser({
+    isValidNode: node => node.type !== 'script',
+  })
+
   if (loading) {
     return <Loader size={100}/>
   }
@@ -76,8 +81,8 @@ const Home = () => {
                   value={newContent}
                   onChange={setNewContent}/> :
                 <ReactMarkdown
+                  astPlugins={[parseHtml]}
                   children={data.content}
-                  allowDangerousHtml
                   escapeHtml={false}
                 />}
             </Box>
