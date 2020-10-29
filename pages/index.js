@@ -75,7 +75,11 @@ const Home = () => {
                 <MDEditor
                   value={newContent}
                   onChange={setNewContent}/> :
-                <ReactMarkdown source={data.content}/>}
+                <ReactMarkdown
+                  children={data.content}
+                  allowDangerousHtml
+                  escapeHtml={false}
+                />}
             </Box>
           </Container>
         </Box>
