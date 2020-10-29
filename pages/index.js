@@ -5,7 +5,7 @@ import Background from '../components/Background'
 import { useQuery, useMutation } from '@apollo/client'
 import { HOME_PAGE, POST_CONTENT } from '../libs/queries'
 import Loader from '../components/Loader'
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown from 'react-markdown/with-html'
 import MDEditor from '@uiw/react-md-editor'
 import TopBar from '../components/TopBar'
 

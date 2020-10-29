@@ -30,14 +30,15 @@ const authLink = setContext((_, { headers }) => {
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  ssrMode: true
 })
 
 client.query({
   query: gql`
     query {ping}
   `
-}).then(result => 
+}).then(result =>
   console.log('Backend responded with', result.data.ping))
 
 export default client
