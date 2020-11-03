@@ -3,26 +3,22 @@ import { Box, Container, Switch, Button } from '@material-ui/core'
 import { Parallax, Background as BackgroundParallax } from 'react-parallax'
 import Background from '../components/Background'
 import { useQuery, useMutation } from '@apollo/client'
-import { HOME_PAGE, POST_CONTENT } from '../libs/queries'
-import Loader from '../components/Loader'
+import { HOME_PAGE, POST_CONTENT } from '../lib/queries'
 import ReactMarkdown from 'react-markdown'
 import htmlParser from 'react-markdown/plugins/html-parser'
 import MDEditor from '@uiw/react-md-editor'
 import TopBar from '../components/TopBar'
+import Footer from 'react-footer-comp'
 
 const Home = () => {
   const [editContent, setEditContent] = useState(false)
   const [newContent, setNewContent] = useState('')
-  const { loading, error, data } = useQuery(HOME_PAGE)
+  const { error, data } = useQuery(HOME_PAGE)
   const [saveContent] = useMutation(POST_CONTENT)
   
   const parseHtml = htmlParser({
     isValidNode: node => node.type !== 'script',
   })
-
-  if (loading) {
-    return <Loader size={100}/>
-  }
 
   if (error) {
     return <h1>Something went wrong, failed to load content from API :(</h1>
@@ -45,12 +41,12 @@ const Home = () => {
     <Box>
       <TopBar/>
       <Parallax strength={2500}>
-        <Box marginTop={50}>
+        <Box marginTop={50} marginBottom={3}>
           <Container>
             <Box
               bgcolor='white'
               borderRadius={25}
-              padding={15}
+              padding='5%'
               boxShadow={20}
               border='1px solid lightgrey'
             >
@@ -82,7 +78,7 @@ const Home = () => {
                   onChange={setNewContent}/> :
                 <ReactMarkdown
                   astPlugins={[parseHtml]}
-                  children={data.content}
+                  source={data.content}
                   escapeHtml={false}
                 />}
             </Box>
@@ -94,6 +90,12 @@ const Home = () => {
           </Box>
         </BackgroundParallax>
       </Parallax>
+      <Footer
+        text='All rights reserved'
+        copyrightIcon
+        copyrightText
+        bgColor='black'
+      />
     </Box>
   )
 }
