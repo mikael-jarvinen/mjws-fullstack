@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useLazyQuery } from '@apollo/client'
-import { LOGIN } from '../libs/queries'
+import { LOGIN } from '../lib/queries'
 import { Box, Button, Divider, Typography } from '@material-ui/core'
 import { Form } from 'informed'
 import TextInput from '../components/TextInput'
