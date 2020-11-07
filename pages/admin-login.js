@@ -1,28 +1,23 @@
 import React, { useState, useEffect } from 'react'
-import { useLazyQuery } from '@apollo/client'
-import { LOGIN } from '../lib/queries'
 import { Box, Button, Divider, Typography } from '@material-ui/core'
 import { Form } from 'informed'
 import TextInput from '../components/TextInput'
+import { useLogin, useWho } from '../lib/contentService'
 import { useRouter } from 'next/router'
 
 const Login = () => {
   const [clientRender, setClientRender] = useState(false)
-  const [login, { data }] = useLazyQuery(LOGIN)
   const router = useRouter()
+  const login = useLogin()
+  const [whoami, updateWhoami] = useWho()
 
   useEffect(() => {
     setClientRender(true)
   })
 
-  const handleSubmit = ({ username, password}) => {
-    login({ variables: { username, password } })
-  }
-
-  if (data) {
-    document.cookie = 'signedin=true'
-    window.localStorage.setItem('apiToken', data.login)
-    router.push('/')
+  const handleSubmit = async ({ username, password}) => {
+    await login({ username, password })
+    updateWhoami()
   }
 
   const validateEmpty = value => {
@@ -33,6 +28,11 @@ const Login = () => {
 
   if (!clientRender) {
     return null
+  }
+
+  // if logged in redirect to root
+  if (whoami && whoami.username !== '') {
+    router.push('/')
   }
 
   return (

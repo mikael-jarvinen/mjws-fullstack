@@ -14,38 +14,28 @@ import {
   IconButton
 } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
-import { useQuery, useApolloClient, useMutation } from '@apollo/client'
-import { WHOAMI, CONTACT } from '../lib/queries'
 import { Form } from 'informed'
 import TextInput from './TextInput'
 import EmailValidator from 'email-validator'
+import { useWho, useContactSend, useLogout } from '../lib/contentService'
 
 const TopBar = () => {
   const [dialog, toggleDialog] = useState(false)
   const [snackbarOpen, setSnackbarOpen] = useState(false)
-  const {data} = useQuery(WHOAMI)
-  const [sendContact] = useMutation(CONTACT)
-  const client = useApolloClient()
+  const [whoami, updateWhoami] = useWho()
+  const sendContact = useContactSend()
+  const logout = useLogout()
 
   const handleLogout = () => {
-    window.localStorage.clear()
-    client.writeQuery({
-      query: WHOAMI,
-      data: {
-        whoami: {
-          __ref: ''
-        }
-      }
-    })
+    logout()
+    updateWhoami()
   }
 
   const handleContactSubmit = ({ email, name, message }) => {
     sendContact({
-      variables: {
-        email,
-        name,
-        message
-      }
+      email,
+      name,
+      message
     })
     toggleDialog(!dialog)
     setSnackbarOpen(true)
@@ -160,14 +150,14 @@ const TopBar = () => {
                 </DialogActions>
               </Form>
             </Dialog>: null}
-          {data && data.whoami.username !== '' ?
+          {whoami && whoami.username !== '' ?
             <Box display='flex' flexGrow={1}>
               <Box
                 display='flex'
                 flexGrow={1}
                 justifyContent='center'
               >
-                <Typography variant='h6'>Logged in as {data.whoami.username}</Typography>
+                <Typography variant='h6'>Logged in as {whoami.username}</Typography>
               </Box>
               <Box
                 display='flex'
