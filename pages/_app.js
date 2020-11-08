@@ -1,5 +1,4 @@
 import '../styles/globals.css'
-import '@uiw/react-md-editor'
 import { ThemeProvider } from '@material-ui/core'
 import theme from '../components/theme'
 import Head from 'next/head'
