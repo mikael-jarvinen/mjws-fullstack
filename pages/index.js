@@ -3,9 +3,9 @@ import { Box, Container } from '@material-ui/core'
 import { Parallax, Background as BackgroundParallax } from 'react-parallax'
 import Background from '../components/Background'
 import Content from '../components/Content'
-import TopBar from '../components/TopBar'
 import Footer from 'react-footer-comp'
 import { getContent } from '../apiLib/contentService'
+import ContactButton from '../components/ContactButton'
 
 export const getStaticProps = async () => {
   const response = getContent()
@@ -21,7 +21,7 @@ export const getStaticProps = async () => {
 const IndexPage = ({ initialContent }) => {
   return (
     <Box>
-      <TopBar/>
+      <ContactButton/>
       <Parallax strength={2500}>
         <Box marginTop={50} marginBottom={3}>
           <Container>
