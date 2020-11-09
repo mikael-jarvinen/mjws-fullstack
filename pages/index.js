@@ -6,6 +6,7 @@ import Content from '../components/Content'
 import Footer from 'react-footer-comp'
 import { getContent } from '../apiLib/contentService'
 import ContactButton from '../components/ContactButton'
+import TopBar from '../components/TopBar'
 
 export const getStaticProps = async () => {
   const response = getContent()
@@ -21,6 +22,7 @@ export const getStaticProps = async () => {
 const IndexPage = ({ initialContent }) => {
   return (
     <Box>
+      <TopBar/>
       <ContactButton/>
       <Parallax strength={2500}>
         <Box marginTop={50} marginBottom={3}>
